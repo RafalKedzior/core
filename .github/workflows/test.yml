@@ -1,0 +1,36 @@
+name: Build Harbour Compiler
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install MSYS2
+      run: |
+        choco install msys2
+        refreshenv
+
+    - name: Install dependencies
+      run: |
+        pacman -Sy --noconfirm --needed base-devel
+        pacman -Sy --noconfirm --needed mingw-w64-x86_64-gcc
+
+    - name: Build Harbour
+      run: |
+        git clone --depth 1 https://github.com/harbour/core harbour
+        cd harbour
+        make
+
+    - name: Archive binaries
+      uses: actions/upload-artifact@v2
+      with:
+        name: harbour-binaries
+        path: harbour
