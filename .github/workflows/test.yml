@@ -1,9 +1,7 @@
 name: Build Harbour Compiler
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:
